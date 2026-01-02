@@ -3,12 +3,7 @@ document.dispatchEvent(new Event('load:executing'));
 import * as localForage from 'localforage';
 localForage.config({ name: "httptoolkit", version: 1 });
 
-const urlParams = new URLSearchParams(window.location.search);
-const authToken = urlParams.get('authToken');
-localForage.setItem('latest-auth-token', authToken);
-
-import { initSentry, logError } from './errors';
-initSentry(process.env.SENTRY_DSN);
+import { logError } from './errors';
 
 import * as _ from 'lodash';
 import * as React from 'react';

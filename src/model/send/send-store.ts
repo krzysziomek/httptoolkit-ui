@@ -17,7 +17,6 @@ import { persist, hydrate } from '../../util/mobx-persist/persist';
 import { ErrorLike, unreachableWarning } from '../../util/error';
 import { rawHeadersToHeaders } from '../http/headers';
 import { getEffectivePort } from '../../util/url';
-import { trackEvent } from '../../metrics';
 
 import { EventsStore } from '../events/events-store';
 import { RulesStore } from '../rules/rules-store';
@@ -89,8 +88,6 @@ export class SendStore {
     }
 
     async addRequestInputFromExchange(exchange: HttpExchangeView) {
-        trackEvent({ category: 'Send', action: 'Resend exchange' });
-
         this.addRequestInput(
             await buildRequestInputFromExchange(exchange)
         );
@@ -135,8 +132,6 @@ export class SendStore {
     }
 
     readonly sendRequest = async (sendRequest: SendRequest) => {
-        trackEvent({ category: 'Send', action: 'Sent request' });
-
         const requestInput = sendRequest.request;
         const pendingRequestDeferred = getObservableDeferred();
         const abortController = new AbortController();

@@ -8,7 +8,6 @@ import { ProxyStore } from '../model/proxy-store';
 import { canRestartApp, restartApp } from '../services/desktop-api';
 
 import { Button } from './common/inputs';
-import { trackEvent } from '../metrics';
 import { logError } from '../errors';
 
 const WarningContainer = styled.div`

@@ -5,7 +5,6 @@ import { observer, inject } from 'mobx-react';
 
 import { NARROW_LAYOUT_BREAKPOINT, styled, popColor, warningColor } from '../../styles';
 import { Icon } from '../../icons';
-import { trackEvent } from '../../metrics';
 import { logError } from '../../errors';
 import { windowSize } from '../../util/ui';
 
@@ -304,13 +303,6 @@ export class InterceptOption extends React.Component<InterceptOptionProps> {
     }
 
     onActivationStarted = (options: { idSuffix?: string } = {}) => {
-        trackEvent({
-            category: 'Interceptors',
-            action: 'Activated',
-            value: options.idSuffix
-                ? `${this.props.interceptor.id}-${options.idSuffix}`
-                : this.props.interceptor.id
-        });
     };
 
     activateInterceptor = (activationOptions: unknown = {}) => {
@@ -322,14 +314,6 @@ export class InterceptOption extends React.Component<InterceptOptionProps> {
         showRequests?: boolean,
         idSuffix?: string
     } = {}) => {
-        trackEvent({
-            category: 'Interceptors',
-            action: 'Successfully Activated',
-            value: options.idSuffix
-                ? `${this.props.interceptor.id}-${options.idSuffix}`
-                : this.props.interceptor.id
-        });
-
         // Some interceptors don't switch to show the requests, e.g. if the UI shows a list
         // of options to intercept, in case the user wants to select multiple options.
         if (options.showRequests !== false) {

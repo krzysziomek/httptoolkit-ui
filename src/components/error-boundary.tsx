@@ -3,9 +3,7 @@ import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 
 import { styled } from '../styles';
-import { Sentry } from '../errors';
 import { isErrorLike } from '../util/error';
-import { trackEvent } from '../metrics';
 
 import { Button, ButtonLink } from './common/inputs';
 
@@ -76,14 +74,7 @@ export class ErrorBoundary extends React.Component<{
     @action
     componentDidCatch(error: Error, errorInfo: any) {
         this.error = error;
-
-        Sentry.setExtras(errorInfo);
-        Sentry.captureException(error);
-
-        trackEvent({
-            category: 'Error',
-            action: 'UI crashed'
-        });
+        console.error('UI Error:', error, errorInfo);
     }
 
     render() {

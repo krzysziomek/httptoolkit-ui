@@ -5,7 +5,6 @@ import { observer, inject } from "mobx-react";
 
 import { styled } from '../../styles';
 import { WarningIcon, Icon } from '../../icons';
-import { trackEvent } from '../../metrics';
 
 import { uploadFile } from '../../util/ui';
 import { asError, unreachableCheck } from '../../util/error';
@@ -98,8 +97,6 @@ class UpstreamProxyConfig extends React.Component<{ rulesStore: RulesStore }> {
     setProxyType(event: React.ChangeEvent<HTMLSelectElement>) {
         const value = event.currentTarget.value;
         this.proxyType = value as UpstreamProxyType;
-
-        trackEvent({ category: "Config", action: "Set Proxy", value: this.proxyType });
 
         if (value === 'direct' || value === 'system') {
             // Only update immediately when switching to a type that doesn't need a host input.
@@ -311,8 +308,6 @@ class ClientCertificateConfig extends React.Component<{ rulesStore: RulesStore }
     addClientCertificate() {
         const { clientCertificateHostMap } = this.props.rulesStore!;
         clientCertificateHostMap[this.clientCertHostInput] = this.clientCertData!;
-
-        trackEvent({ category: "Config", action: "Add Client Cert" });
 
         this.clientCertHostInput = '';
         this.clientCertData = undefined;
@@ -646,7 +641,6 @@ export class ConnectionSettingsCard extends React.Component<
     @action.bound
     addHostToWhitelist(hostname: string) {
         this.props.rulesStore!.whitelistedCertificateHosts.push(hostname);
-        trackEvent({ category: "Config", action: "Whitelist Host" });
     }
 
     render() {

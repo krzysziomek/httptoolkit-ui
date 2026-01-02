@@ -68,7 +68,6 @@ import {
 } from '../../model/rules/definitions/rtc-rule-definitions';
 
 import { Select } from '../common/inputs';
-import { trackEvent } from '../../metrics';
 
 const getStepKey = (h: StepClass | Step) =>
     StepClassKeyLookup.get(h as any) || StepClassKeyLookup.get(h.constructor as any);
@@ -213,12 +212,6 @@ export const StepSelector = inject('rulesStore', 'accountStore')(observer((p: {
         value={getStepKey(p.value)}
         onChange={(event) => {
             const stepKey = event.target.value as AvailableStepKey;
-            // Roughly track which types of steps are most used:
-            trackEvent({
-                category: 'Modify',
-                action: 'Step Selected',
-                value: stepKey
-            });
             const step = instantiateStep(stepKey, p.rulesStore!);
             p.onChange(step);
         }}
