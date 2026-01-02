@@ -5,7 +5,6 @@ import * as dedent from 'dedent';
 import {
     distanceInWordsStrict, distanceInWordsToNow, format, isFuture
 } from 'date-fns';
-import { SubscriptionPlans } from '@httptoolkit/accounts';
 
 import { WithInjected } from '../../types';
 import { styled, Theme, ThemeName } from '../../styles';
@@ -171,7 +170,7 @@ class SettingsPage extends React.Component<SettingsPageProps> {
                         </ContentLabel>
                         <ContentValue>
                             {
-                                ({
+                                (({
                                     'active': 'Active',
                                     'trialing': 'Active (trial)',
                                     'past_due': <strong
@@ -183,7 +182,7 @@ class SettingsPage extends React.Component<SettingsPageProps> {
                                     'deleted': sub.expiry && isFuture(sub.expiry)
                                         ? `Active (until ${sub.expiry.toLocaleDateString()})`
                                         : 'Cancelled'
-                                }[sub.status]) || 'Unknown'
+                                } as any)[sub.status]) || 'Unknown'
                             }
                             { isAccountUpdateInProcess &&
                                 <AccountUpdateSpinner />
@@ -195,22 +194,18 @@ class SettingsPage extends React.Component<SettingsPageProps> {
                         </ContentLabel>
                         <ContentValue>
                             {
-                                subscriptionPlans.state === 'fulfilled'
-                                ? (subscriptionPlans.value as SubscriptionPlans)[sub.sku]?.name
-                                // If the accounts API is unavailable for plan metadata for some reason, we can just
-                                // format the raw SKU to get something workable, no worries:
-                                : _.startCase(sub.sku)
+                                _.startCase(sub.sku)
                             }
                         </ContentValue>
 
                         <ContentLabel>
                             {
-                                ({
+                                (({
                                     'active': 'Next renews',
                                     'trialing': 'Renews',
                                     'past_due': 'Next payment attempt',
                                     'deleted': 'Ends',
-                                }[sub.status]) || 'Current period ends'
+                                } as any)[sub.status]) || 'Current period ends'
                             }
                         </ContentLabel>
                         <ContentValue>
@@ -375,7 +370,7 @@ class SettingsPage extends React.Component<SettingsPageProps> {
             throw new Error("Can't cancel without a subscription");
         }
 
-        const planName = SubscriptionPlans[subscription.sku].name;
+        const planName = _.startCase(subscription.sku);
 
         let cancelEffect: string;
 

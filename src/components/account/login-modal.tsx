@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { asErrorLike } from '@httptoolkit/util';
-import { sendAuthCode, loginWithCode } from '@httptoolkit/accounts';
 
 import { styled, keyframes } from '../../styles';
 import { Icon } from '../../icons';
@@ -225,18 +224,7 @@ const LoginFields = ({ accountStore }: { accountStore: AccountStore }) => {
 
     const handleEmailSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        setIsLoading(true);
-        setError(false);
-
-        try {
-            await sendAuthCode(email, 'website');
-            setIsLoading(false);
-            setIsEmailSent(true);
-        } catch (e) {
-            setIsLoading(false);
-            setError(asErrorLike(e).message || 'An error occurred');
-        }
+        accountStore.cancelLogin();
     };
 
     const handleBackButton = () => {
@@ -247,19 +235,7 @@ const LoginFields = ({ accountStore }: { accountStore: AccountStore }) => {
 
     const handleCodeSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        setIsLoading(true);
-        setError(false);
-
-        try {
-            await loginWithCode(email, code);
-            await accountStore.finalizeLogin(email);
-            // We never unset isLoading - the modal disappears entirely when the
-            // account store state is fully updated, and we want to spin till then.
-        } catch (e) {
-            setIsLoading(false);
-            setError(asErrorLike(e).message || 'An error occurred');
-        }
+        accountStore.cancelLogin();
     };
 
     const smallPrint = (

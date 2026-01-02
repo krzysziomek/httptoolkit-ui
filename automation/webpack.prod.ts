@@ -1,7 +1,6 @@
 import * as path from 'path';
 import merge from "webpack-merge";
 import { RawSource } from 'webpack-sources';
-import * as SentryPlugin from '@sentry/webpack-plugin';
 
 import { InjectManifest } from 'workbox-webpack-plugin';
 import * as ssri from "ssri";
@@ -9,13 +8,6 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CspHtmlWebpackPlugin from 'csp-html-webpack-plugin';
 
 import common from "./webpack.common";
-
-const shouldPublishSentryRelease =
-    process.env.SENTRY_AUTH_TOKEN && process.env.UI_VERSION;
-console.log(shouldPublishSentryRelease
-    ? "* Webpack will upload source map to Sentry *"
-    : "Sentry source map upload disabled - no token set"
-);
 
 const CSP_REPORT_URL = process.env.REPORT_URI && process.env.UI_VERSION
     ? `${process.env.REPORT_URI}&sentry_release=${process.env.UI_VERSION}`
@@ -125,20 +117,6 @@ export default merge(common, {
                 },
             ] as any
         }),
-        ...(shouldPublishSentryRelease
-        ? [
-            SentryPlugin.sentryWebpackPlugin({
-                release: {
-                    name: process.env.UI_VERSION!,
-                    setCommits: {
-                        auto: true,
-                        ignoreEmpty: true,
-                        ignoreMissing: true
-                    }
-                }
-            })
-        ]
-        : []),
         new BundleAnalyzerPlugin({
             analyzerMode: 'static',
             openAnalyzer: false,
@@ -218,7 +196,7 @@ export default merge(common, {
                     },
                     processFn: processCsp('strict')
                 } as any)
-            ]
-        : [])
-    ]
+            ] as any
+        : []) as any
+    ] as any
 });

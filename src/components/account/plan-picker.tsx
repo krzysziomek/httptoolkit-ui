@@ -4,8 +4,6 @@ import { observer } from "mobx-react";
 import { observable, action, computed } from "mobx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import type { SKU, SubscriptionPlans } from "@httptoolkit/accounts";
-
 import { styled, css } from "../../styles";
 import { Icon } from "../../icons";
 import { ObservablePromise } from "../../util/observable";
@@ -308,8 +306,8 @@ type PlanCycle = 'monthly' | 'annual';
 
 interface PlanPickerProps {
     email?: string;
-    plans: ObservablePromise<SubscriptionPlans>;
-    onPlanPicked: (sku: SKU | undefined) => void;
+    plans: ObservablePromise<any>;
+    onPlanPicked: (sku: any | undefined) => void;
     logOut: () => void;
     logIn: () => void;
 }
@@ -510,7 +508,7 @@ export class PlanPicker extends React.Component<PlanPickerProps> {
 
     getPlanMonthlyPrice = (tierCode: string): string => {
         if (!this.isPricingAvailable) throw new Error("Can't query prices if pricing is not available");
-        const plans = this.props.plans.value as SubscriptionPlans; // Always true once pricing is available
+        const plans = this.props.plans.value as any;
 
         const sku = this.getSKU(tierCode);
         const plan = plans[sku];
@@ -519,7 +517,7 @@ export class PlanPicker extends React.Component<PlanPickerProps> {
     };
 
     getSKU = (tierCode: string) => {
-        return `${tierCode}-${this.planCycle}` as SKU;
+        return `${tierCode}-${this.planCycle}`;
     }
 
     buyPlan = (tierCode: string) => {

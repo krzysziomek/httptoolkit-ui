@@ -23,7 +23,7 @@ export class AccountStore {
         return false;
     }
 
-    @computed get featureFlags() {
+    @computed get featureFlags(): string[] {
         return [];
     }
 
@@ -51,6 +51,9 @@ export class AccountStore {
 
     @observable
     isAccountUpdateInProcess = false;
+
+    @observable
+    accountDataLastUpdated = 0;
 
     @computed get canManageSubscription() {
         return false;
